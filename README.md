@@ -1,1 +1,1 @@
-Run with `poetry run python3 main.py`
+Run with `poetry install --no-root && poetry run python3 main.py`
