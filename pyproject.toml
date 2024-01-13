@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "github-pr-contribution-util"
+name = "github-pr-util"
 version = "0.1.0"
 description = ""
 authors = ["MattNotarangelo <matt.notarangelo1@gmail.com>"]
