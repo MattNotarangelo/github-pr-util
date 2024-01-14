@@ -2,12 +2,11 @@
 Get all PRs for a given user
 """
 
+import collections
+import datetime
 import json
 import os
-
-from collections import defaultdict
-from dotenv import load_dotenv
-
+import dotenv
 import requests
 
 
@@ -16,11 +15,12 @@ GITHUB_USER = "MattNotarangelo"
 OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2023-11-20..2024-02-22"]
 
 
-load_dotenv()
+dotenv.load_dotenv()
 
 GRAPHQL_URL = "https://api.github.com/graphql"
 API_TOKEN = os.getenv("GITHUB_API_TOKEN")
 OUTPUT_FILE_NAME = "out.json"
+OUTPUT_MD_NAME = "out.md"
 
 if not API_TOKEN:
     raise SystemExit("GITHUB_API_TOKEN must be provided in a .env file")
@@ -68,7 +68,7 @@ def send_query(query_args, pagination_cursor):
 
 
 def transform_data(d):
-    new = defaultdict(list)
+    new = collections.defaultdict(list)
     for i in d:
         repo = i["node"]["repository"]["nameWithOwner"]
         i["node"]["repository"] = repo  # rename field
@@ -96,9 +96,46 @@ def merge_with_existing_data(d):
                     existing[j["repository"]] = []
                 existing[j["repository"]].append(j)
 
-        # d[i].sort(key=lambda x: x["merged_at"]) # TODO
+        existing[i].sort(key=lambda x: datetime.datetime.strptime(x["createdAt"], "%Y-%m-%dT%H:%M:%SZ"), reverse=True)
 
     return existing
+
+
+def write_newline(fp):
+    fp.write("\n")
+
+
+def write_h2_header(fp, text):
+    fp.write(f"## {text}")
+    write_newline(fp)
+    write_newline(fp)
+
+
+def write_table_header(fp):
+    fp.write("Pull request|Impact")
+    write_newline(fp)
+    fp.write("---|---")
+    write_newline(fp)
+
+
+def write_table_content(fp, d):
+    for i in d:
+        if i["comment"] != "skip":
+            fp.write(f"[{i['title']}]({i['url']})|{i['comment']}")
+            write_newline(fp)
+
+
+def output_markdown(d):
+    with open(OUTPUT_MD_NAME, "w") as f:
+        f.write("# Github pull requests")
+        write_newline(f)
+        write_newline(f)
+
+        for i in d:
+            write_h2_header(f, i)
+            write_table_header(f)
+            write_table_content(f, d[i])
+            write_newline(f)
 
 
 if __name__ == "__main__":
@@ -126,3 +163,5 @@ if __name__ == "__main__":
     data = merge_with_existing_data(data)
     with open(OUTPUT_FILE_NAME, "w", encoding="utf-8") as f:
         json.dump(data, f)
+
+    output_markdown(data)
