@@ -12,15 +12,16 @@ import requests
 
 ### User supplied values
 GITHUB_USER = "MattNotarangelo"
-OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2023-11-20..2024-02-22"]
+OPTIONAL_QUERY_ARGS = ["user:ROKT"]
+# OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2023-11-20..2024-02-22"]
 
 
 dotenv.load_dotenv()
 
 GRAPHQL_URL = "https://api.github.com/graphql"
 API_TOKEN = os.getenv("GITHUB_API_TOKEN")
-OUTPUT_FILE_NAME = "out.json"
-OUTPUT_MD_NAME = "out.md"
+OUTPUT_FILE_NAME = "mattnotarangelo.json"
+OUTPUT_MD_NAME = "mattnotarangelo.md"
 
 if not API_TOKEN:
     raise SystemExit("GITHUB_API_TOKEN must be provided in a .env file")
