@@ -27,10 +27,6 @@ if not API_TOKEN:
     raise SystemExit("GITHUB_API_TOKEN must be provided in a .env file")
 
 
-### TODO
-# output formatting
-
-
 def send_query(query_args, pagination_cursor):
     query = f"""query
     {{

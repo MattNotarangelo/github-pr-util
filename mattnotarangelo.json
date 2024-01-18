@@ -80,7 +80,7 @@
       "createdAt": "2023-12-06T03:47:25Z",
       "mergedAt": "2023-12-14T00:43:51Z",
       "url": "https://github.com/ROKT/kafka/pull/222",
-      "comment": "Improvement: Reduced size and complexity of MM2 helm values by using standardised config"
+      "comment": "Improvement: Reduced size and complexity of MM2 helm values by using standardised config. Reduced LOC by 70%"
     },
     {
       "title": "DMR-715: Deploy kafka components in all regions [PROD]",
