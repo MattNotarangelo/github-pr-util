@@ -93,7 +93,12 @@ def merge_with_existing_data(d):
                     existing[j["repository"]] = []
                 existing[j["repository"]].append(j)
 
-        existing[i].sort(key=lambda x: datetime.datetime.strptime(x["createdAt"], "%Y-%m-%dT%H:%M:%SZ"), reverse=True)
+        existing[i].sort(
+            key=lambda x: datetime.datetime.strptime(
+                x["createdAt"], "%Y-%m-%dT%H:%M:%SZ"
+            ),
+            reverse=True,
+        )
 
     return existing
 
@@ -122,6 +127,13 @@ def write_table_content(fp, d):
             write_newline(fp)
 
 
+def has_prs_to_output(d):
+    for i in d:
+        if i["comment"] != "skip":
+            return True
+    return False
+
+
 def output_markdown(d):
     with open(OUTPUT_MD_NAME, "w") as f:
         f.write("# Github pull requests")
@@ -129,10 +141,11 @@ def output_markdown(d):
         write_newline(f)
 
         for i in d:
-            write_h2_header(f, i)
-            write_table_header(f)
-            write_table_content(f, d[i])
-            write_newline(f)
+            if has_prs_to_output(d[i]):
+                write_h2_header(f, i)
+                write_table_header(f)
+                write_table_content(f, d[i])
+                write_newline(f)
 
 
 if __name__ == "__main__":
