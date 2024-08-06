@@ -61,6 +61,9 @@ def send_query(query_args, pagination_cursor):
         timeout=10,
     )
 
+    if r.status_code != 200:
+        raise SystemExit(r.json())
+
     return r.json()
 
 
