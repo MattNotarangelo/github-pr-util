@@ -12,8 +12,8 @@ import requests
 
 ### User supplied values
 GITHUB_USER = "MattNotarangelo"
-OPTIONAL_QUERY_ARGS = ["user:ROKT"]
-# OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2023-11-20..2024-02-22"]
+# OPTIONAL_QUERY_ARGS = ["user:ROKT"]
+OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2024-05-06..2024-08-06"]
 
 
 dotenv.load_dotenv()
@@ -41,6 +41,13 @@ def send_query(query_args, pagination_cursor):
                     createdAt
                     mergedAt
                     url
+                    reviews(first: 100) {{
+                        nodes {{
+                            author {{
+                                login
+                            }}
+                        }}
+                    }}
                     }}
                 }}
             }}
@@ -161,6 +168,8 @@ if __name__ == "__main__":
         *OPTIONAL_QUERY_ARGS,
     ]
 
+    reviewer_set = collections.defaultdict(int)
+
     has_next_page = True
     cursor = "null"
     data = []
@@ -171,10 +180,10 @@ if __name__ == "__main__":
         cursor = f'"{page_info["endCursor"]}"'
 
         data.extend(resp["data"]["search"]["edges"])
+    for i in data:
+        reviews = i["node"]["reviews"]["nodes"]
+        unique_reviewers = set(x["author"]["login"] for x in reviews)
+        for x in unique_reviewers:
+            reviewer_set[x] += 1
 
-    data = transform_data(data)
-    data = merge_with_existing_data(data)
-    with open(OUTPUT_FILE_NAME, "w", encoding="utf-8") as f:
-        json.dump(data, f)
-
-    output_markdown(data)
+    print(reviewer_set)
