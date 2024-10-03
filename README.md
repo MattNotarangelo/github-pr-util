@@ -4,7 +4,7 @@ This is a tool which gets all the PRs made by a user and exports them to json an
 
 ## Usage
 
-Add github api token to `.env` file
+Add github api token to `.env` file (requires repo scope and organization access if you want PRs within that org)
 ```
 GITHUB_API_TOKEN=ghp_xxx
 ```
