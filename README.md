@@ -5,11 +5,13 @@ This is a tool which gets all the PRs made by a user and exports them to json an
 ## Usage
 
 Add github api token to `.env` file (requires repo scope and organization access if you want PRs within that org)
+
 ```
 GITHUB_API_TOKEN=ghp_xxx
 ```
 
 Fill in the user supplied values section in main.py
+
 ```py
 ### User supplied values
 GITHUB_USER = "Github_username"
@@ -17,7 +19,7 @@ GITHUB_USER = "Github_username"
 OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2024-03-01..2024-10-03"] # get PRs in org:ROKT within a specified time range
 ```
 
-Run with `poetry install --no-root && poetry run python3 main.py`
+Run with `uv run python3 main.py`
 
 This will generate a json and md file in the project directory.
 

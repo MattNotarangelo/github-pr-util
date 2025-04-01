@@ -13,7 +13,7 @@ import requests
 ### User supplied values
 GITHUB_USER = "MattNotarangelo"
 # OPTIONAL_QUERY_ARGS = ["user:ROKT"]
-OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2024-02-15..2024-10-03"]
+OPTIONAL_QUERY_ARGS = ["user:ROKT", "merged:2024-07-31..2025-03-31"]
 
 
 dotenv.load_dotenv()
@@ -97,9 +97,7 @@ def merge_with_existing_data(d):
                 existing[j["repository"]].append(j)
 
         existing[i].sort(
-            key=lambda x: datetime.datetime.strptime(
-                x["createdAt"], "%Y-%m-%dT%H:%M:%SZ"
-            ),
+            key=lambda x: datetime.datetime.strptime(x["createdAt"], "%Y-%m-%dT%H:%M:%SZ"),
             reverse=True,
         )
 
